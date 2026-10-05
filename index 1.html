@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Car Demo</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<style>body{margin:0;overflow:hidden;font-family:Arial}#ui{position:fixed;bottom:20px;left:0;width:100%;text-align:center;z-index:9999}button{padding:12px 18px;margin:5px;border:none;border-radius:10px;background:#0078d7;color:#fff}#speedDisplay{background:#fff;display:inline-block;padding:10px;border-radius:8px}</style>
+</head>
+<body>
+<div id="ui"><div id="speedDisplay">Speed : <span id="speedValue">1</span></div><br><button onclick="speedUp()">🚀 เร่ง</button><button onclick="speedDown()">🐢 ช้า</button><button onclick="toggleMove()">⏸ หยุด / ▶ วิ่ง</button></div>
+<a-scene embedded vr-mode-ui="enabled:false" arjs="trackingMethod: best; sourceType:webcam;">
+<a-marker preset="hiro">
+<a-cylinder position="0 0 0" radius="2" height="0.05" color="#6CBF6C"></a-cylinder>
+<a-cylinder position="0 0.4 0" radius="0.07" height="0.8" color="#8B4513"></a-cylinder>
+<a-sphere position="0 1 0" radius="0.35" color="green"></a-sphere>
+<a-entity id="trees"></a-entity>
+<a-entity id="car"><a-box width="0.45" height="0.15" depth="0.25" color="red"></a-box><a-box position="0 0.12 0" width="0.22" height="0.1" depth="0.2" color="#222"></a-box></a-entity>
+</a-marker><a-entity camera></a-entity></a-scene>
+<script>
+const trees=document.querySelector('#trees');for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2;const x=Math.cos(a)*1.5;const z=Math.sin(a)*1.5;const t=document.createElement('a-entity');t.innerHTML=`<a-cylinder position="${x} 0.3 ${z}" radius="0.05" height="0.6" color="#8B4513"></a-cylinder><a-sphere position="${x} 0.8 ${z}" radius="0.22" color="green"></a-sphere>`;trees.appendChild(t);}let speed=0.02,angle=0,moving=true;const car=document.querySelector('#car');function speedUp(){speed=Math.min(speed+0.01,0.08);document.getElementById('speedValue').textContent=speed.toFixed(3)}function speedDown(){speed=Math.max(speed-0.01,0.005);document.getElementById('speedValue').textContent=speed.toFixed(3)}function toggleMove(){moving=!moving}function animate(){if(moving){angle+=speed;let r=1.0;let x=Math.cos(angle)*r;let z=Math.sin(angle)*r;car.setAttribute('position',`${x} 0.12 ${z}`);car.setAttribute('rotation',`0 ${-(angle*180/Math.PI)+90} 0`);}requestAnimationFrame(animate)}animate();
+</script></body></html>
